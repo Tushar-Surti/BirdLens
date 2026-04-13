@@ -1,0 +1,167 @@
+@import "tailwindcss";
+@import "lenis/dist/lenis.css";
+
+:root {
+  --color-bg: #f5f0e7;
+  --color-bg-deep: #eee6d9;
+  --color-surface: rgba(252, 249, 244, 0.84);
+  --color-surface-strong: #f8f3ea;
+  --color-border: rgba(27, 39, 33, 0.12);
+  --color-border-strong: rgba(27, 39, 33, 0.2);
+  --color-forest: #17342a;
+  --color-forest-soft: #355448;
+  --color-olive: #6f755e;
+  --color-text: #1d2521;
+  --color-muted: #5f665f;
+  --color-champagne: #b79866;
+  --shadow-card: 0 24px 60px rgba(24, 33, 29, 0.08);
+  --shadow-lift: 0 20px 44px rgba(24, 33, 29, 0.12);
+  --font-display: "Iowan Old Style", "Palatino Linotype", "URW Palladio L", "Book Antiqua",
+    Georgia, serif;
+  --font-body: "Avenir Next", "Segoe UI", "Helvetica Neue", Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(183, 152, 102, 0.12), transparent 20%),
+    linear-gradient(180deg, #f8f3eb 0%, #f2ece1 54%, #f6f2ea 100%);
+  color: var(--color-text);
+  font-family: var(--font-body), sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: none;
+}
+
+::selection {
+  background: rgba(183, 152, 102, 0.24);
+}
+
+a,
+button,
+input,
+textarea {
+  transition:
+    color 180ms ease,
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease,
+    opacity 180ms ease;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+audio {
+  width: 100%;
+}
+
+.font-display {
+  font-family: var(--font-display), serif;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.page-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
+}
+
+.page-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(25, 37, 32, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(25, 37, 32, 0.035) 1px, transparent 1px);
+  background-size: 96px 96px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.3), transparent 80%);
+}
+
+.section-divider {
+  position: relative;
+}
+
+.section-divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(27, 39, 33, 0.1) 15%,
+    rgba(27, 39, 33, 0.16) 50%,
+    rgba(27, 39, 33, 0.1) 85%,
+    transparent 100%
+  );
+}
+
+.grain-surface {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.68), rgba(249, 244, 236, 0.96)),
+    radial-gradient(circle at 12% 18%, rgba(183, 152, 102, 0.08), transparent 24%);
+}
+
+.muted-ring {
+  box-shadow: inset 0 0 0 1px rgba(23, 52, 42, 0.1);
+}
+
+.gold-line {
+  background: linear-gradient(90deg, rgba(183, 152, 102, 0), rgba(183, 152, 102, 0.7), rgba(183, 152, 102, 0));
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: rgba(23, 52, 42, 0.22);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(23, 52, 42, 0.34);
+  background-clip: padding-box;
+}

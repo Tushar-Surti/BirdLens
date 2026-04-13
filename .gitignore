@@ -10,4 +10,12 @@ env/
 .env
 .env.*
 
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+apps/web/.next/
+apps/web/node_modules/
+apps/web/out/
+
 models/vision/best_model.pth
