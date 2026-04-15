@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+import asyncio
+import os
 import tempfile
+import urllib.request
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 import uvicorn
@@ -16,7 +20,29 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 IMAGE_MODEL_PATH = REPO_ROOT / "models" / "vision" / "indian_birds_image_classifier.pth"
 AUDIO_MODEL_PATH = REPO_ROOT / "models" / "audio" / "bird_classifier_full.pth"
 
-app = FastAPI(title="BirdLens API", version="1.0.0")
+PING_INTERVAL = 10 * 60  # 10 minutes — keeps Render free tier awake
+
+
+async def _self_ping() -> None:
+    """Ping own /health endpoint every 10 min to prevent Render free-tier sleep."""
+    port = os.environ.get("PORT", "8000")
+    url = f"http://localhost:{port}/health"
+    while True:
+        await asyncio.sleep(PING_INTERVAL)
+        try:
+            urllib.request.urlopen(url, timeout=10)
+        except Exception:
+            pass  # ignore — server may still be starting up
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    task = asyncio.create_task(_self_ping())
+    yield
+    task.cancel()
+
+
+app = FastAPI(title="BirdLens API", version="1.0.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
