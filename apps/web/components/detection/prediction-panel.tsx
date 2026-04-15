@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { AudioLines, ImageIcon, Sparkles } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 import { PredictionSession } from "@/lib/site-data";
 
@@ -23,9 +24,22 @@ export function PredictionPanel({
   result
 }: PredictionPanelProps) {
   const icon = mode === "image" ? <ImageIcon size={18} /> : <AudioLines size={18} />;
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if ((isLoading || result) && panelRef.current) {
+      const rect = panelRef.current.getBoundingClientRect();
+      if (rect.top < 0 || rect.top > window.innerHeight * 0.6) {
+        panelRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      }
+    }
+  }, [isLoading, result]);
+
+  const badgeLabel = result?.headline?.toLowerCase().includes("live") ? "Live Result" : "Result";
 
   return (
-    <SurfaceCard className="sticky top-28 overflow-hidden p-6 sm:p-7">
+    <div ref={panelRef} className="h-full">
+    <SurfaceCard className="h-full overflow-hidden p-6 sm:p-7">
       <div className="absolute left-0 right-0 top-0 h-px gold-line" />
       <div className="flex items-center justify-between gap-3">
         <div className="inline-flex items-center gap-2 text-sm text-[var(--color-muted)]">
@@ -33,7 +47,7 @@ export function PredictionPanel({
           Prediction Result
         </div>
         <span className="rounded-full bg-[rgba(23,52,42,0.06)] px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--color-olive)]">
-          Demo Output
+          {result ? badgeLabel : "Awaiting Input"}
         </span>
       </div>
 
@@ -165,52 +179,11 @@ export function PredictionPanel({
               ))}
             </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--color-olive)]">
-                  Alternative Species
-                </p>
-                <p className="text-sm text-[var(--color-muted)]">Ranked shortlist</p>
-              </div>
-              <div className="space-y-4">
-                {result.alternatives.map((candidate, index) => (
-                  <div key={candidate.species} className="space-y-2">
-                    <div className="flex items-baseline justify-between gap-4">
-                      <div>
-                        <p className="text-sm font-medium text-[var(--color-text)]">
-                          {candidate.species}
-                        </p>
-                        <p className="text-xs leading-5 text-[var(--color-muted)]">
-                          {candidate.note}
-                        </p>
-                      </div>
-                      <p className="text-sm text-[var(--color-text)]">
-                        {candidate.confidence.toFixed(1)}%
-                      </p>
-                    </div>
-                    <div className="h-1.5 rounded-full bg-[rgba(23,52,42,0.08)]">
-                      <motion.div
-                        className="h-full rounded-full bg-[rgba(53,84,72,0.92)]"
-                        initial={{ width: 0 }}
-                        animate={{ width: `${candidate.confidence}%` }}
-                        transition={{
-                          duration: 0.6,
-                          delay: 0.15 + index * 0.08,
-                          ease: [0.16, 1, 0.3, 1]
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="rounded-[22px] border border-[rgba(23,52,42,0.08)] bg-[rgba(23,52,42,0.04)] p-5">
-              <p className="text-sm leading-7 text-[var(--color-muted)]">{result.caution}</p>
-            </div>
+            <p className="text-sm leading-7 text-[var(--color-muted)]">{result.caution}</p>
           </motion.div>
         ) : null}
       </AnimatePresence>
     </SurfaceCard>
+    </div>
   );
 }

@@ -56,9 +56,9 @@ export const detectionModes: DetectionMode[] = [
     title: "Audio Detection",
     href: "/detect/audio",
     description:
-      "Analyze calls and songs from short recordings to recognize species when the bird is heard before it is seen.",
-    highlights: ["Audio upload", "Call pattern analysis", "Alternative matches"],
-    footnote: "Best for dawn choruses, hidden birds, and call-driven identification."
+      "Analyze calls and songs from field recordings using the updated LightBirdNet acoustic workflow.",
+    highlights: ["Audio upload", "5s log-Mel analysis", "Top-5 ranked matches"],
+    footnote: "Best for dawn choruses, hidden birds, and call-driven identification with ranked confidence."
   }
 ];
 
@@ -110,7 +110,7 @@ export const supportedModeHighlights = [
   {
     title: "Audio-led identification",
     caption: "For recordings of calls, songs, and ambient bird vocalizations.",
-    note: "Designed to surface the most likely species from spectro-temporal structure and vocal patterns."
+    note: "Designed to surface top-ranked species from 5-second log-Mel spectrogram structure and vocal patterns."
   },
   {
     title: "Human-in-the-loop review",
@@ -229,102 +229,117 @@ export const imagePredictionLibrary: PredictionSession[] = [
 
 export const audioPredictionLibrary: PredictionSession[] = [
   {
-    headline: "Dominant song signature matched",
+    headline: "Top-5 acoustic ranking complete",
     summary:
-      "The audio pattern maps most strongly to Asian Koel, especially across the repeated tonal rise and sustained phrase shape.",
+      "The 5-second analysis window maps most strongly to Asian Koel, with confidence driven by repeated tonal rise and stable phrase contour.",
     primary: {
       species: "Asian Koel",
-      confidence: 92.1,
-      note: "Pitch contour and phrase repetition align with a stable vocal signature in the acoustic model."
+      confidence: 91.8,
+      note: "Pitch contour and phrase repetition align strongly with the model's learned Koel vocal signature."
     },
     alternatives: [
       {
         species: "Common Hawk-Cuckoo",
-        confidence: 73.5,
-        note: "There is partial overlap in repetitive phrasing, though the tonal envelope differs."
+        confidence: 76.3,
+        note: "Phrase repetition overlaps, but the harmonic envelope is less stable than the top match."
       },
       {
-        species: "Brainfever Bird",
-        confidence: 61.2,
-        note: "Rhythmic rise is related, but the dominant band structure is less consistent."
+        species: "Large-billed Crow",
+        confidence: 58.7,
+        note: "Mid-band energy overlap appears in short segments, but phrase spacing diverges." 
       },
       {
         species: "Red-vented Bulbul",
-        confidence: 27.8,
-        note: "A low-confidence alternative triggered by general call energy rather than exact phrasing."
+        confidence: 41.9,
+        note: "Energetic chirp clusters partially align, though the sustained motif is weaker."
+      },
+      {
+        species: "Coppersmith Barbet",
+        confidence: 29.6,
+        note: "Narrow-band rhythmic components are present, but cadence consistency is lower."
       }
     ],
     metrics: [
-      { label: "Signal quality", value: "Clean" },
-      { label: "Response", value: "1.8s" },
-      { label: "Clip length", value: "12s" }
+      { label: "Window", value: "5.0s" },
+      { label: "Sample rate", value: "22.05 kHz mono" },
+      { label: "Feature map", value: "128x128 log-Mel" }
     ],
-    caution: "Nearby overlapping calls can influence acoustic confidence, especially in mixed dawn recordings."
+    caution: "Overlapping dawn-chorus vocals can spread confidence across close acoustic neighbors in the top-5 list."
   },
   {
-    headline: "Barbet-like phrase structure identified",
+    headline: "Rhythmic call family cluster detected",
     summary:
-      "The clip most closely resembles Coppersmith Barbet through its repeating metallic pattern and stable rhythmic interval.",
+      "The updated pipeline favors Coppersmith Barbet from metallic repeated phrase structure and compact tonal rhythm.",
     primary: {
       species: "Coppersmith Barbet",
-      confidence: 88.6,
-      note: "The model responds strongly to the repetitive hammering cadence and narrow-band call profile."
+      confidence: 89.4,
+      note: "The classifier responds strongly to repetitive hammering cadence and stable narrow-band energy." 
     },
     alternatives: [
       {
         species: "White-cheeked Barbet",
-        confidence: 79.1,
-        note: "A close alternate when phrase tempo is similar, though this sample is more compact in tone."
+        confidence: 80.8,
+        note: "Very close alternate when phrase tempo matches, with slightly broader harmonic spread."
       },
       {
         species: "Brown-headed Barbet",
-        confidence: 57.3,
-        note: "Related cadence, but the dominant spectral region is less aligned."
+        confidence: 61.7,
+        note: "Related cadence class with weaker alignment in dominant spectral regions."
+      },
+      {
+        species: "Red-whiskered Bulbul",
+        confidence: 37.5,
+        note: "Short repetitive phrases overlap at onset but diverge in sustained timing."
       },
       {
         species: "Common Tailorbird",
-        confidence: 22.5,
-        note: "Low-confidence noise edge from repetitive short chirps."
+        confidence: 24.6,
+        note: "Low-confidence edge candidate activated by compact chirp repetition."
       }
     ],
     metrics: [
-      { label: "Signal quality", value: "Good" },
-      { label: "Response", value: "1.7s" },
-      { label: "Clip length", value: "9s" }
+      { label: "Window", value: "5.0s" },
+      { label: "Inference", value: "Top-5 softmax" },
+      { label: "Transform", value: "Log-dB -> [0,1]" }
     ],
-    caution: "Barbet species are close acoustic neighbours, so confidence should be read alongside location and habitat cues."
+    caution: "Barbet species remain close acoustic neighbors, so review habitat context before final identification."
   },
   {
-    headline: "Short-call sequence favored",
+    headline: "High-energy short phrases prioritized",
     summary:
-      "The acoustic model leans toward Red-vented Bulbul, primarily from the clustered short phrases and lively frequency movement.",
+      "The model favors Red-vented Bulbul from clustered short-call bursts and fast frequency movement across the analysis window.",
     primary: {
       species: "Red-vented Bulbul",
-      confidence: 86.4,
-      note: "Phrase density and short tonal bursts align with a frequent bulbul-like call pattern."
+      confidence: 87.2,
+      note: "Phrase density and short tonal bursts align with a common bulbul-like call signature." 
     },
     alternatives: [
       {
         species: "Red-whiskered Bulbul",
-        confidence: 74.2,
-        note: "Family-level overlap is strong, but the cadence sits closer to Red-vented in this clip."
+        confidence: 75.8,
+        note: "Family-level overlap is strong, though cadence remains closer to Red-vented in this clip."
       },
       {
         species: "Common Tailorbird",
-        confidence: 59.8,
-        note: "The short-call rhythm is related, though the frequency range appears broader here."
+        confidence: 62.9,
+        note: "Short-call rhythm overlaps, but frequency distribution appears broader and less periodic."
+      },
+      {
+        species: "Common Myna",
+        confidence: 39.1,
+        note: "Busy phrase transitions overlap at onset, with weaker consistency through the full window."
       },
       {
         species: "Oriental Magpie-Robin",
-        confidence: 26.4,
-        note: "Low-confidence alternative activated by energetic phrase transitions."
+        confidence: 27.2,
+        note: "Low-confidence fallback triggered by energetic phrase transitions."
       }
     ],
     metrics: [
-      { label: "Signal quality", value: "Moderate" },
-      { label: "Response", value: "1.9s" },
-      { label: "Clip length", value: "11s" }
+      { label: "Window", value: "5.0s" },
+      { label: "Sample rate", value: "22.05 kHz mono" },
+      { label: "Output", value: "Ranked top-5" }
     ],
-    caution: "Urban ambience and overlapping human noise can soften the distinction between short-call species."
+    caution: "Urban ambience and overlapping human noise can soften class separation for short-call species."
   }
 ];

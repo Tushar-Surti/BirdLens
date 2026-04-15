@@ -7,40 +7,44 @@ export function AudioDetectionExperience() {
     <DetectionWorkbench
       mode="audio"
       uploadTitle="Upload a bird audio clip"
-      uploadDescription="Submit a short recording of a bird call or song. Cleaner clips with a dominant vocal line will create a more legible acoustic result state."
+      uploadDescription="Upload a field recording and BirdLens will process a 5-second mono window using the updated LightBirdNet acoustic pipeline for top-species ranking."
       accept="audio/wav,audio/mpeg,audio/ogg,audio/flac,audio/x-m4a,audio/mp4"
-      helperText="Supported formats include WAV, MP3, OGG, FLAC, and M4A. Short clips with minimal human noise or overlapping calls are ideal."
-      supportedFormats={["WAV / MP3 / OGG / FLAC", "Short field recordings", "Dominant vocal signal"]}
+      helperText="Supported formats: WAV, MP3, OGG, FLAC, and M4A. Audio is resampled to 22.05 kHz, converted to mono, and normalized into a 128x128 log-Mel window."
+      supportedFormats={[
+        "WAV / MP3 / OGG / FLAC / M4A",
+        "Auto pad/trim to 5 seconds",
+        "Top-5 ranked species output"
+      ]}
       previewType="audio"
       actionLabel="Run Audio Detection"
       predictions={audioPredictionLibrary}
       facts={[
-        { label: "Input", value: "Uploaded call or song clip" },
-        { label: "Model focus", value: "Cadence, pitch contour, phrase shape" },
-        { label: "Output", value: "Species shortlist + confidence" }
+        { label: "Input", value: "Single uploaded recording (5s analysis window)" },
+        { label: "Model", value: "LightBirdNet (log-Mel spectrogram classifier)" },
+        { label: "Output", value: "Top-5 species probabilities" }
       ]}
       insights={[
         {
-          title: "Best acoustic cues",
+          title: "Preprocessing behavior",
           description:
-            "Repeated phrases, tonal rise or fall, rhythm stability, and dominant frequency regions influence the acoustic readout most strongly."
+            "Clips are converted to mono at 22.05 kHz, then represented as 128-bin log-Mel spectrograms to keep inference consistent across uploads."
         },
         {
           title: "When confidence improves",
           description:
-            "Predictions benefit from clips with a clear foreground call and a narrower sound scene rather than layered dawn chorus recordings."
+            "Predictions improve when one bird is dominant in the foreground and environmental noise does not mask repeated phrase structure."
         },
         {
           title: "How to read the result",
           description:
-            "Treat the top match as a leading hypothesis and compare nearby alternatives against habitat, timing, and observer notes."
+            "Read the top match as the leading hypothesis, then compare the remaining ranked candidates against location, season, and behavior notes."
         }
       ]}
       recorderPlaceholder={{
         title: "Live recording can slot in here next.",
         description:
-          "The interface reserves space for browser-based capture without disrupting the premium layout. When the backend is ready, this block can evolve into a direct record-and-detect flow.",
-        items: ["Browser capture", "Noise trimming", "Live inference state"]
+          "The interface reserves space for browser capture so an end-to-end record-and-detect flow can be added after the production inference endpoint is connected.",
+        items: ["Browser capture", "5s preview window", "Live top-5 inference state"]
       }}
     />
   );

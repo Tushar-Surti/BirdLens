@@ -6,7 +6,7 @@ import { MotionReveal } from "@/components/ui/motion-reveal";
 
 export const metadata: Metadata = {
   title: "Audio Detection | BirdLens",
-  description: "Upload a bird audio clip and preview BirdLens acoustic species detection."
+  description: "Upload a bird audio clip and preview BirdLens LightBirdNet acoustic species ranking."
 };
 
 export default function AudioDetectionPage() {
@@ -22,11 +22,11 @@ export default function AudioDetectionPage() {
               </p>
             </div>
             <h1 className="font-display text-5xl leading-[0.92] tracking-[-0.045em] text-[var(--color-text)] sm:text-[4.4rem]">
-              A refined acoustic workflow for bird call recognition.
+              Updated acoustic detection with top-5 species ranking.
             </h1>
             <p className="max-w-3xl text-base leading-8 text-[var(--color-muted)] sm:text-lg">
-              Upload a bird audio clip to preview how BirdLens can present audio-led detection in a
-              calm, high-end interface that respects both signal quality and interpretability.
+              Upload a bird audio clip to preview the latest LightBirdNet workflow, including
+              5-second mono analysis, log-Mel feature extraction, and ranked confidence output.
             </p>
           </MotionReveal>
         </Container>
