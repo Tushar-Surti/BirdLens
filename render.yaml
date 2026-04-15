@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: birdlens-api
+    runtime: docker
+    # Render builds and runs the Dockerfile at the repo root
+    dockerfilePath: ./Dockerfile
+    plan: free          # upgrade to starter for always-on + more RAM
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8000

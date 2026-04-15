@@ -1,0 +1,31 @@
+# Version control
+.git
+.gitignore
+
+# Node / frontend (not needed in backend image)
+apps/
+node_modules/
+
+# Python caches
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Training notebooks (not needed at runtime)
+notebooks/
+
+# Local env files
+.env
+.env.local
+*.env
+
+# OS artefacts
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
