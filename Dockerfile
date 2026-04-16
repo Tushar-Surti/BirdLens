@@ -31,6 +31,6 @@ ENV PYTHONPATH=/app/src
 # Disable numba JIT to prevent memory spike on first librosa call
 ENV NUMBA_DISABLE_JIT=1
 
-EXPOSE 8000
+EXPOSE 7860
 
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "7860"]

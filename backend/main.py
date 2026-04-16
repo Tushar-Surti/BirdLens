@@ -67,7 +67,7 @@ def _load_audio() -> None:
 
 async def _self_ping() -> None:
     """External-facing ping is handled by UptimeRobot. This is a fallback."""
-    port = os.environ.get("PORT", "8000")
+    port = os.environ.get("PORT", "7860")
     url = f"http://localhost:{port}/health"
     while True:
         await asyncio.sleep(PING_INTERVAL)
