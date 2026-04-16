@@ -28,6 +28,8 @@ COPY backend/ ./backend/
 
 # Make birdlens package importable
 ENV PYTHONPATH=/app/src
+# Disable numba JIT to prevent memory spike on first librosa call
+ENV NUMBA_DISABLE_JIT=1
 
 EXPOSE 8000
 
