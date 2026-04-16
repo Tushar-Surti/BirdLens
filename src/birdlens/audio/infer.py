@@ -124,7 +124,7 @@ def run_inference(audio_path: Path, model_path: Path, top_k: int) -> dict[str, A
     if not model_path.exists():
         raise FileNotFoundError(f"Model checkpoint not found: {model_path}")
 
-    checkpoint = torch.load(str(model_path), map_location="cpu")
+    checkpoint = torch.load(str(model_path), map_location="cpu", weights_only=False)
 
     classes = checkpoint.get("classes")
     if not classes:
