@@ -1,3 +1,12 @@
+---
+title: BirdLens API
+emoji: 🐦
+colorFrom: green
+colorTo: blue
+sdk: docker
+pinned: false
+---
+
 # BirdLens
 
 BirdLens is a bird species detection project for Indian birds with two modalities:
