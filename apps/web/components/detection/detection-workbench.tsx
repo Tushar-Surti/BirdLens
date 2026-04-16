@@ -174,14 +174,25 @@ export function DetectionWorkbench({
     setResult(null);
     setInferenceError(null);
 
+    // Call Render backend directly from the browser to bypass Vercel's 10s
+    // serverless function timeout. Falls back to the Next.js proxy route for
+    // local development when NEXT_PUBLIC_BACKEND_URL is not set.
+    const backendBase = process.env.NEXT_PUBLIC_BACKEND_URL ?? "";
+    const TIMEOUT_MS = 120_000; // 2 minutes — enough for a cold Render start
+
     if (mode === "audio") {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
       try {
         const formData = new FormData();
         formData.append("file", file);
 
-        const response = await fetch("/api/detect/audio", {
+        const url = backendBase ? `${backendBase}/detect/audio` : "/api/detect/audio";
+        const response = await fetch(url, {
           method: "POST",
-          body: formData
+          body: formData,
+          signal: controller.signal
         });
 
         const payload = (await response.json()) as AudioInferenceResponse | { error?: string };
@@ -198,22 +209,33 @@ export function DetectionWorkbench({
         });
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : "Unable to run live audio inference.";
+          error instanceof Error
+            ? error.name === "AbortError"
+              ? "Request timed out. The server may be starting up — please try again."
+              : error.message
+            : "Unable to run live audio inference.";
         setInferenceError(errorMessage);
         setIsLoading(false);
+      } finally {
+        clearTimeout(timer);
       }
 
       return;
     }
 
     if (mode === "image") {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
       try {
         const formData = new FormData();
         formData.append("file", file);
 
-        const response = await fetch("/api/detect/image", {
+        const url = backendBase ? `${backendBase}/detect/image` : "/api/detect/image";
+        const response = await fetch(url, {
           method: "POST",
-          body: formData
+          body: formData,
+          signal: controller.signal
         });
 
         const payload = (await response.json()) as ImageInferenceResponse | { error?: string };
@@ -230,9 +252,15 @@ export function DetectionWorkbench({
         });
       } catch (error) {
         const errorMessage =
-          error instanceof Error ? error.message : "Unable to run live image inference.";
+          error instanceof Error
+            ? error.name === "AbortError"
+              ? "Request timed out. The server may be starting up — please try again."
+              : error.message
+            : "Unable to run live image inference.";
         setInferenceError(errorMessage);
         setIsLoading(false);
+      } finally {
+        clearTimeout(timer);
       }
 
       return;
