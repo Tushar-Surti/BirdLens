@@ -162,6 +162,8 @@ async def detect_audio(file: UploadFile = File(...)) -> dict:
             ],
         }
     except Exception as exc:
+        import traceback
+        print(f"AUDIO ERROR: {exc}\n{traceback.format_exc()}")
         raise HTTPException(status_code=500, detail=str(exc)) from exc
     finally:
         tmp_path.unlink(missing_ok=True)
